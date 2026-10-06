@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Activity 1: Letter Naming Fluency (LNF)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            border-bottom: 4px solid #ffc629;
+            padding-bottom: 20px;
+        }
+
+        .unit-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            font-weight: 300;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ffc629;
+            display: inline-block;
+        }
+
+        .examiner-script {
+            background-color: #fffbf0;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 4px solid #ffc629;
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .script-section {
+            margin-bottom: 16px;
+        }
+
+        .script-label {
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 6px;
+        }
+
+        .script-text {
+            color: #34495e;
+            margin-left: 12px;
+        }
+
+        .scoring-area {
+            margin-bottom: 40px;
+        }
+
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #f9fbfc;
+            border-radius: 6px;
+        }
+
+        .letter-button {
+            aspect-ratio: 1;
+            border: 2px solid #e0e6ed;
+            background-color: white;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .letter-button:hover {
+            border-color: #ffc629;
+            background-color: #fffbf0;
+        }
+
+        .letter-button.error {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+            text-decoration: line-through;
+        }
+
+        .letter-button.bracketed {
+            background-color: #ffc629;
+            color: #000000;
+            border-color: #000000;
+            font-weight: 700;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: 700;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffc629 0%, #ffdc8a 100%);
+            color: #000000;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 4px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #000000;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #333333;
+        }
+
+        .btn-secondary {
+            background-color: #b0b3b2;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #9a9d9c;
+        }
+
+        .stats-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background-color: #fffbf0;
+            padding: 16px;
+            border-radius: 6px;
+            border-left: 4px solid #ffc629;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .note {
+            margin-top: 20px;
+            padding: 16px;
+            background-color: #f0f0f0;
+            border-left: 4px solid #b0b3b2;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #2c3e50;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            .stats-display {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .letter-grid {
+                gap: 6px;
+            }
+
+            .letter-button {
+                font-size: 16px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="unit-label">Practice Activity 1</div>
+            <h1>Letter Naming Fluency (LNF)</h1>
+            <p class="subtitle">Score student letter naming responses in real time</p>
+        </div>
+
+        <!-- Examiner Script -->
+        <div class="examiner-script">
+            <div class="script-section">
+                <div class="script-label">Examiner Script</div>
+                <div class="script-text">
+                    "Here are some letters (point to the student form). Tell me the names of as many letters as you can. When I say 'Begin,' start here (point to the first letter), and go across the page. Point to each letter and tell me the name of that letter. If you come to a letter you don't know, I'll tell it to you. Put your finger on the first letter. Ready? Begin."
+                </div>
+            </div>
+
+            <div class="script-section">
+                <div class="script-label">Reminders</div>
+                <div class="script-text">
+                    <strong>Start timer:</strong> After you say "Begin"<br>
+                    <strong>Student hesitates:</strong> Wait 3 seconds; name the letter; point to next letter and say "Keep going"; mark as incorrect<br>
+                    <strong>Student says letter sounds:</strong> Say "Remember, tell me the letter's name, not its sound." Score as incorrect.<br>
+                    <strong>Discontinue:</strong> If student does not produce any correct letter names in the first line (10 letters)
+                </div>
+            </div>
+        </div>
+
+        <!-- Scoring Section -->
+        <div class="scoring-area">
+            <h2 class="section-title">Score the Letters</h2>
+            <p style="font-size: 14px; color: #7f8c8d; margin-bottom: 16px; margin-top: 16px;">Click letters to mark errors. Use the bracket button to mark where student stopped when timer ended.</p>
+
+            <div class="timer-display" id="timerDisplay">0:00</div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="startTimer()">Start Timer (1 min)</button>
+                <button class="btn btn-secondary" onclick="toggleBracketMode()">Mark Where Student Stopped</button>
+                <button class="btn btn-secondary" onclick="resetScore()">Reset All</button>
+                <button class="btn btn-primary" style="background-color: #ffc629; color: #000000;" onclick="saveToPDF()">Save to PDF</button>
+            </div>
+
+            <div id="bracketMode" style="display: none; background-color: #fffbf0; padding: 12px; border-radius: 4px; border-left: 4px solid #ffc629; margin-bottom: 16px; font-size: 14px; color: #2c3e50;">
+                <strong>Bracket Mode Active:</strong> Click the letter where the student stopped when the timer ended.
+            </div>
+
+            <div class="letter-grid" id="letterGrid"></div>
+
+            <div class="stats-display">
+                <div class="stat-box">
+                    <div class="stat-label">Letters Read</div>
+                    <div class="stat-value" id="lettersRead">—</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Errors</div>
+                    <div class="stat-value" id="errorCount">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Correct</div>
+                    <div class="stat-value" id="correctCount">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">LCPM</div>
+                    <div class="stat-value" id="lcpm">—</div>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>LCPM Calculation:</strong> Letters correct per minute = letters read up to bracket (]) − errors. Time is exactly 1 minute.
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        const letters = ['o', 's', 'c', 'g', 'A', 'E', 'O', 'U',
+                        'n', 'k', 'R', 'j', 'a', 'u', 'I', 'H', 'm', 'C', 'B', 'i',
+                        'v', 'N', 'F', 'r', 'b', 'M', 'L', 'd', 'T', 'D',
+                        't', 'f', 'S', 'x', 'e', 'p', 'P', 'G', 'h', 'y',
+                        'E', 'F', 'h', 'g', 'B', 'i', 'm', 'C', 'O', 'e',
+                        'u', 'S', 'U', 'r', 'v', 'P', 'j', 'd', 'b', 'N',
+                        'a', 'c', 'A', 'x', 'o', 'f', 'T', 'H', 'n', 'k',
+                        'M', 'L', 's', 'y', 'R', 'G', 't', 'p', 'I', 'D',
+                        'a', 'd', 'c', 'v', 'n', 'g', 'e', 'u', 'm', 'o',
+                        'y', 's', 'b', 'h', 't', 'p', 'i', 'f', 'r', 'k'];
+
+        let errors = new Set();
+        let bracketIndex = null;
+        let timerStarted = false;
+        let bracketModeActive = false;
+        let timerInterval = null;
+        let timerSeconds = 0;
+
+        function initializeGrid() {
+            const grid = document.getElementById('letterGrid');
+            grid.innerHTML = '';
+            
+            letters.forEach((letter, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'letter-button';
+                btn.textContent = letter;
+                btn.onclick = () => {
+                    if (bracketModeActive) {
+                        setBracket(index);
+                        toggleBracketMode();
+                    } else {
+                        toggleError(index);
+                    }
+                };
+                if (errors.has(index)) btn.classList.add('error');
+                if (bracketIndex === index) btn.classList.add('bracketed');
+                grid.appendChild(btn);
+            });
+            
+            updateStats();
+        }
+
+        function toggleError(index) {
+            if (errors.has(index)) {
+                errors.delete(index);
+            } else {
+                errors.add(index);
+            }
+            initializeGrid();
+        }
+
+        function toggleBracketMode() {
+            bracketModeActive = !bracketModeActive;
+            document.getElementById('bracketMode').style.display = bracketModeActive ? 'block' : 'none';
+        }
+
+        function setBracket(index) {
+            bracketIndex = index;
+            initializeGrid();
+        }
+
+        function updateStats() {
+            const lettersRead = bracketIndex !== null ? bracketIndex + 1 : '—';
+            const errorCount = errors.size;
+            const correctCount = bracketIndex !== null ? (bracketIndex + 1 - errorCount) : 0;
+            const lcpm = bracketIndex !== null ? correctCount : '—';
+
+            document.getElementById('lettersRead').textContent = lettersRead;
+            document.getElementById('errorCount').textContent = errorCount;
+            document.getElementById('correctCount').textContent = correctCount;
+            document.getElementById('lcpm').textContent = lcpm;
+        }
+
+        function startTimer() {
+            timerStarted = !timerStarted;
+            const btn = event.target;
+            
+            if (timerStarted) {
+                btn.textContent = 'Stop Timer';
+                btn.style.backgroundColor = '#e74c3c';
+                timerSeconds = 0;
+                
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    updateTimerDisplay();
+                    
+                    if (timerSeconds >= 60) {
+                        clearInterval(timerInterval);
+                        alert('1 minute is up! Click a letter to mark where the student stopped.');
+                        timerStarted = false;
+                        btn.textContent = 'Start Timer (1 min)';
+                        btn.style.backgroundColor = '';
+                    }
+                }, 1000);
+            } else {
+                clearInterval(timerInterval);
+                btn.textContent = 'Start Timer (1 min)';
+                btn.style.backgroundColor = '';
+            }
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            const display = `${mins}:${secs.toString().padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+        }
+
+        function resetScore() {
+            errors.clear();
+            bracketIndex = null;
+            timerStarted = false;
+            clearInterval(timerInterval);
+            timerSeconds = 0;
+            document.getElementById('timerDisplay').textContent = '0:00';
+            initializeGrid();
+        }
+
+        function saveToPDF() {
+            const element = document.querySelector('.container');
+            const opt = {
+                margin: 10,
+                filename: 'LNF_Practice_Activity.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        // Initialize on load
+        initializeGrid();
+    </script>
+</body>
+</html>
